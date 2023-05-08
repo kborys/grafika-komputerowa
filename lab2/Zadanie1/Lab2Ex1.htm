@@ -37,23 +37,18 @@
        */
       function draw() {
         graphics.clearRect(0, 0, 600, 600);
+        // wariant 8 - półksiężyc
 
-        // TODO: insert code to draw the image for Exercise 1!
-        // wariant 8
-        // w drugim zadaniu 12-kat zamiast kwadratu
+        graphics.beginPath();
+        graphics.moveTo(100, 500);
+        graphics.bezierCurveTo(350, 550, 550, 325, 250, 100);
+        graphics.bezierCurveTo(350, 250, 350, 400, 100, 500);
 
-        const ctx = canvas.getContext('2d');
-        ctx.lineWidth = 3;
-        const x = canvas.width / 2;
-        const y = canvas.height / 2;
-        const radius = x / 2;
-        ctx.beginPath();
-        ctx.arc(x, y, radius, (Math.PI * 6) / 4, (Math.PI * 5) / 6, false);
-        ctx.stroke();
-        ctx.arc(x, y, x, y, radius);
-        // ctx.fillStyle = '#ffff00';
-        // ctx.fill();
-        ctx.stroke();
+        graphics.strokeStyle = 'black';
+        graphics.stroke();
+
+        graphics.fillStyle = 'yellow';
+        graphics.fill();
       } // end of draw()
 
       /**
