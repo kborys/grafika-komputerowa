@@ -30,81 +30,77 @@
       function createWorld() {
         world = new CompoundObject(); // Root node for the scene graph.
 
-        // TODO: Create objects and add them to the scene graph.
-        // rotatingRect = new TransformedObject(filledRect);   // (DELETE THIS EXAMPLE)
-        // rotatingRect.setScale(2,2).setColor("red");
-
-        front_left_septagon = new TransformedObject(dodecagon);
-        front_left_septagon
+        frontLeftDodecagon = new TransformedObject(dodecagon);
+        frontLeftDodecagon
           .setTranslation(-1.35, -0.35)
           .setColor('pink')
           .setScale(0.75, 0.75);
-        world.add(front_left_septagon);
-        front_right_septagon = new TransformedObject(dodecagon);
-        front_right_septagon
+        world.add(frontLeftDodecagon);
+        frontRightDodecagon = new TransformedObject(dodecagon);
+        frontRightDodecagon
           .setTranslation(1.35, -1.35)
           .setColor('pink')
           .setScale(0.75, 0.75);
-        world.add(front_right_septagon);
-        front_swing = new TransformedObject(filledRect);
-        front_swing
+        world.add(frontRightDodecagon);
+        frontSwing = new TransformedObject(filledRect);
+        frontSwing
           .setTranslation(0, -0.85)
           .setColor('red')
           .setScale(3, 0.2)
           .setRotation(-20);
-        world.add(front_swing);
-        front_base = new TransformedObject(filledTriangle);
-        front_base.setTranslation(0, -2.85).setColor('blue').setScale(0.5, 2.0);
-        world.add(front_base);
+        world.add(frontSwing);
+        frontBase = new TransformedObject(filledTriangle);
+        frontBase.setTranslation(0, -2.85).setColor('blue').setScale(0.5, 2.0);
+        world.add(frontBase);
 
-        second_left_septagon = new TransformedObject(dodecagon);
-        second_left_septagon
+        secondLeftDodecagon = new TransformedObject(dodecagon);
+        secondLeftDodecagon
           .setTranslation(-3.3, 2)
           .setColor('pink')
           .setScale(0.6, 0.6);
-        world.add(second_left_septagon);
-        second_right_septagon = new TransformedObject(dodecagon);
-        second_right_septagon
+        world.add(secondLeftDodecagon);
+        secondRightDodecagon = new TransformedObject(dodecagon);
+        secondRightDodecagon
           .setTranslation(-1.15, 1.2)
           .setColor('pink')
           .setScale(0.6, 0.6);
-        world.add(second_right_septagon);
-        second_swing = new TransformedObject(filledRect);
-        second_swing
+        world.add(secondRightDodecagon);
+        secondSwing = new TransformedObject(filledRect);
+        secondSwing
           .setTranslation(-2.25, 1.6)
           .setColor('red')
           .setScale(2.4, 0.15)
           .setRotation(-20);
-        world.add(second_swing);
-        second_base = new TransformedObject(filledTriangle);
-        second_base
+        world.add(secondSwing);
+        secondBase = new TransformedObject(filledTriangle);
+        secondBase
           .setTranslation(-2.25, 0)
           .setColor('purple')
           .setScale(0.4, 1.6);
-        world.add(second_base);
+        world.add(secondBase);
 
-        third_left_septagon = new TransformedObject(dodecagon);
-        third_left_septagon
+        thirdLeftDodecagon = new TransformedObject(dodecagon);
+        thirdLeftDodecagon
           .setTranslation(1.3, 2.25)
           .setColor('pink')
           .setScale(0.4, 0.4);
-        world.add(third_left_septagon);
-        third_right_septagon = new TransformedObject(dodecagon);
-        third_right_septagon
+        world.add(thirdLeftDodecagon);
+        thirdRightDodecagon = new TransformedObject(dodecagon);
+        thirdRightDodecagon
           .setTranslation(2.7, 1.75)
           .setColor('pink')
           .setScale(0.4, 0.4);
-        world.add(third_right_septagon);
-        third_swing = new TransformedObject(filledRect);
-        third_swing
+        world.add(thirdRightDodecagon);
+        thirdSwing = new TransformedObject(filledRect);
+        thirdSwing
           .setTranslation(2, 2)
           .setColor('red')
           .setScale(1.5, 0.1)
           .setRotation(-20);
-        world.add(third_swing);
-        third_base = new TransformedObject(filledTriangle);
-        third_base.setTranslation(2, 1).setColor('green').setScale(0.25, 1);
-        world.add(third_base);
+        world.add(thirdSwing);
+        thirdBase = new TransformedObject(filledTriangle);
+        thirdBase.setTranslation(2, 1).setColor('green').setScale(0.25, 1);
+        world.add(thirdBase);
       }
 
       /**
@@ -115,12 +111,12 @@
         frameNumber++;
 
         // TODO: Update state in preparation for drawing the next frame.
-        front_left_septagon.setRotation(frameNumber * 0.75);
-        front_right_septagon.setRotation(frameNumber * 0.75);
-        second_left_septagon.setRotation(frameNumber * 0.75);
-        second_right_septagon.setRotation(frameNumber * 0.75);
-        third_left_septagon.setRotation(frameNumber * 0.75);
-        third_right_septagon.setRotation(frameNumber * 0.75);
+        frontLeftDodecagon.setRotation(frameNumber * 0.75);
+        frontRightDodecagon.setRotation(frameNumber * 0.75);
+        secondLeftDodecagon.setRotation(frameNumber * 0.75);
+        secondRightDodecagon.setRotation(frameNumber * 0.75);
+        thirdLeftDodecagon.setRotation(frameNumber * 0.75);
+        thirdRightDodecagon.setRotation(frameNumber * 0.75);
       }
 
       //------------------- A Simple Scene Object-Oriented Scene Graph API ----------------
@@ -245,7 +241,7 @@
         g.restore();
       };
 
-      // Create some basic septagons as custom SceneGraphNode objects.
+      // Create some basic dodecagons as custom SceneGraphNode objects.
 
       var line = new SceneGraphNode(); // Line from (-0.5,0) to (0.5,0)
       line.doDraw = function (g) {
