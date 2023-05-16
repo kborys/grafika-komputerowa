@@ -2,18 +2,17 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
 
 /**
- * A panel that displays a two-dimensional animation that is constructed
- * using a scene graph to implement hierarchical modeling.  There is a
+ * A panel that displays a two-dimensional animation that is drawn
+ * using subroutines to implement hierarchical modeling.  There is a
  * checkbox that turns the animation on and off.
  */
-public class SceneGraph extends JPanel {
+public class SubroutineHierarchy extends JPanel {
 
 	public static void main(String[] args) {
-		JFrame window = new JFrame("Scene Graph 2D");
-		window.setContentPane( new SceneGraph() );
+		JFrame window = new JFrame("Subroutine Hierarchy");
+		window.setContentPane( new SubroutineHierarchy() );
 		window.pack();
 		window.setLocation(100,60);
 		window.setResizable(false);
@@ -37,158 +36,133 @@ public class SceneGraph extends JPanel {
 
 	private int frameNumber = 0;  // Current frame number, goes up by one in each frame.
 
-	private CompoundObject world; // SceneGraphNode representing the entire scene.
-
-	// TODO: Define global variables to represent animated objects in the scene.
-	private TransformedObject rotatingRect;  // (DELETE THIS EXAMPLE)
-
 	/**
-	 *  Builds the data structure that represents the entire picture. 
+	 *  Responsible for drawing the entire scene.  The display is filled with the background
+	 *  color before this method is called.
 	 */
-	private void createWorld() {
-
-		world = new CompoundObject();  // Root node for the scene graph.
-
-		// TODO: Create objects and add them to the scene graph.
-		rotatingRect = new TransformedObject(filledRect);   // (DELETE THIS EXAMPLE)
-		rotatingRect.setScale(2,2).setColor(Color.RED); 
-		world.add(rotatingRect);
-
-	} // end createWorld()
-
-
+	private void drawWorld(Graphics2D g2) {
+		windmill(g2, Color.BLUE, 0, 2);
+		windmill(g2, Color.CYAN, 2, -2.5);
+		windmill(g2, Color.GREEN, -4, 0);
+	} // end drawWorld()
+	
+	
 	/**
-	 * This method is called just before each frame is drawn.  It updates the modeling
-	 * transformations of the objects in the scene that are animated.
+	 * This method is called before each frame is drawn.
 	 */
-	public void updateFrame() {
+	private void updateFrame() {
 		frameNumber++;
-
-		// TODO: Update state in preparation for drawing the next frame.
-		rotatingRect.setRotation(frameNumber*0.75); // (DELETE THIS EXAMPLE)
-
 	}
 
-
-
-	//------------------- A Simple Scene Object-Oriented Scene Graph API ----------------
-
-	private static abstract class SceneGraphNode {
-		Color color;  // If not null, the default color for this node and its children.
-		              // If null, the default color is inherited.
-		SceneGraphNode setColor(Color c) {
-			this.color = c;
-			return this;
-		}
-		final void draw(Graphics2D g) {
-			Color saveColor = null;
-			if (color != null) {
-				saveColor = g.getColor();
-				g.setColor(color);
-			}
-			doDraw(g);
-			if (saveColor != null) {
-				g.setColor(saveColor);
-			}
-		}
-		abstract void doDraw(Graphics2D g);
+	private void windmill(Graphics2D g2, Color triangleColor, double xTranslate, double yTranslate) {
+		g2.translate(xTranslate, yTranslate);
+		AffineTransform saveTransform = g2.getTransform();
+		Color saveColor = g2.getColor();
+		
+		rotatingPoly(g2, 1);
+		rotatingPoly(g2, -1);
+		rotatingRect(g2);
+		windMillBase(g2, triangleColor);
+		
+		g2.setColor(saveColor);
+		g2.setTransform(saveTransform);
 	}
 	
-	/**
-	 *  Defines a subclass, CompoundObject, of SceneGraphNode to represent
-	 *  an object that is made up of sub-objects.  Initially, there are no
-	 *  sub-objects.  Objects are added with the add() method.
-	 */
-	private static class CompoundObject extends SceneGraphNode {
-		ArrayList<SceneGraphNode> subobjects = new ArrayList<SceneGraphNode>();
-		CompoundObject add(SceneGraphNode node) {
-			subobjects.add(node);
-			return this;
-		}
-		void doDraw(Graphics2D g) {
-			for (SceneGraphNode node : subobjects)
-				node.draw(g);
-		}
-	}
-
-	/**
-	 *  TransformedObject is a subclass of SceneGraphNode that
-	 *  represents an object along with a modeling transformation to
-	 *  be applied to that object.  The object must be specified in
-	 *  the constructor.  The transformation is specified by calling
-	 *  the setScale(), setRotate() and setTranslate() methods. Note that
-	 *  each of these methods returns a reference to the TransformedObject
-	 *  as its return value, to allow for chaining of method calls.
-	 *  The modeling transformations are always applied to the object
-	 *  in the order scale, then rotate, then translate.
-	 */
-	private static class TransformedObject extends SceneGraphNode {
-		SceneGraphNode object;
-		double rotationInDegrees = 0;
-		double scaleX = 1, scaleY = 1;
-		double translateX = 0, translateY = 0;
-		TransformedObject(SceneGraphNode object) {
-			this.object = object;
-		}
-		TransformedObject setRotation(double degrees) {
-			rotationInDegrees = degrees;
-			return this;
-		}
-		TransformedObject setTranslation(double dx, double dy) {
-			translateX = dx;
-			translateY = dy;
-			return this;
-		}
-		TransformedObject setScale(double sx, double sy) {
-			scaleX = sx;
-			scaleY = sy;
-			return this;
-		}
-		void doDraw(Graphics2D g) {
-			AffineTransform savedTransform = g.getTransform();
-			if (translateX != 0 || translateY != 0)
-				g.translate(translateX,translateY);
-			if (rotationInDegrees != 0)
-				g.rotate( rotationInDegrees/180.0 * Math.PI);
-			if (scaleX != 1 || scaleY != 1)
-				g.scale(scaleX,scaleY);
-			object.draw(g);
-			g.setTransform(savedTransform);
-		}
+	private void windMillBase(Graphics2D g2, Color color) {
+		AffineTransform saveTransform = g2.getTransform();
+		Color saveColor = g2.getColor();
+		
+		g2.setColor( color );
+		g2.scale(1,2);
+		g2.translate(0,-1);
+		filledTriangle(g2);
+		
+		g2.setColor(saveColor);
+		g2.setTransform(saveTransform);
 	}
 	
-	       // Create some basic objects as custom SceneGraphNodes.
-
-	private static SceneGraphNode line = new SceneGraphNode() { 
-		void doDraw(Graphics2D g) {  g.draw( new Line2D.Double( -0.5,0, 0.5,0) ); }
-	};
-
-	private static SceneGraphNode rect = new SceneGraphNode() {
-		void doDraw(Graphics2D g) {  g.draw(new Rectangle2D.Double(-0.5,-0.5,1,1)); }
-	};
-
-	private static SceneGraphNode filledRect = new SceneGraphNode() {
-		void doDraw(Graphics2D g) {  g.fill(new Rectangle2D.Double(-0.5,-0.5,1,1)); }
-	};
-
-	private static SceneGraphNode circle = new SceneGraphNode() {
-		void doDraw(Graphics2D g) {  g.draw(new Ellipse2D.Double(-0.5,-0.5,1,1)); }
-	};
-
-	private static SceneGraphNode filledCircle = new SceneGraphNode() {
-		void doDraw(Graphics2D g) {  g.fill(new Ellipse2D.Double(-0.5,-0.5,1,1)); }
-	};
-
-	private static SceneGraphNode filledTriangle = new SceneGraphNode() {
-		void doDraw(Graphics2D g) {  // width = 1, height = 1, center of base is at (0,0);
-			Path2D path = new Path2D.Double();
-			path.moveTo(-0.5,0);
-			path.lineTo(0.5,0);
-			path.lineTo(0,1);
-			path.closePath();
-			g.fill(path);
+	private void rotatingRect(Graphics2D g2) {
+		AffineTransform saveTransform = g2.getTransform(); 
+		Color saveColor = g2.getColor();
+		
+		g2.setColor( Color.RED );
+		g2.rotate( Math.toRadians( frameNumber*0.75 ));
+		g2.scale( 2, .25 );
+		filledRect(g2);
+		
+		g2.setColor(saveColor);
+		g2.setTransform(saveTransform);
+	}
+	
+	private void rotatingPoly(Graphics2D g2, double xTranslate) {
+		AffineTransform saveTransform = g2.getTransform(); 
+		Color saveColor = g2.getColor();
+		
+		g2.setColor( Color.BLACK );
+		g2.rotate( Math.toRadians( frameNumber*0.75 ));
+		g2.translate(xTranslate,0);
+		g2.setStroke(new BasicStroke(1));
+		g2.scale( .005, .005);
+		drawPolygon(g2, 12);
+		
+		g2.setColor(saveColor);
+		g2.setTransform(saveTransform);
+	}
+	
+	private void drawPolygon(Graphics2D g2, int sides) {
+		AffineTransform saveTransform = g2.getTransform(); 
+		Color saveColor = g2.getColor();
+		
+		int centerX = 0;
+		int centerY = 0;
+		int radius = 100;
+		int xPoints[] = new int[sides];
+		int yPoints[] = new int[sides];
+		for(int i = 0; i < sides; i++) 
+		{
+			double angle = 2 * Math.PI * i / sides;
+			xPoints[i] = (int) (centerX + radius * Math.cos(angle));
+			yPoints[i] = (int) (centerY + radius * Math.sin(angle));
 		}
-	};
+
+		g2.rotate( Math.toRadians( frameNumber*-3 ));
+		g2.drawPolygon(xPoints, yPoints, sides);
+
+		g2.setColor(saveColor);
+		g2.setTransform(saveTransform);
+	}
+
+
+	//------------------- Some methods for drawing basic shapes. ----------------
+	
+	private static void line(Graphics2D g2) { // Draws a line from (-0.5,0) to (0.5,0)
+		g2.draw( new Line2D.Double( -0.5,0, 0.5,0) );
+	}
+
+	private static void rect(Graphics2D g2) { // Strokes a square, size = 1, center = (0,0)
+		g2.draw(new Rectangle2D.Double(-0.5,-0.5,1,1));
+	}
+
+	private static void filledRect(Graphics2D g2) { // Fills a square, size = 1, center = (0,0)
+		g2.fill(new Rectangle2D.Double(-0.5,-0.5,1,1));
+	}
+
+	private static void circle(Graphics2D g2) { // Strokes a circle, diameter = 1, center = (0,0)
+		g2.draw(new Ellipse2D.Double(-0.5,-0.5,1,1));
+	}
+
+	private static void filledCircle(Graphics2D g2) { // Fills a circle, diameter = 1, center = (0,0)
+		g2.draw(new Ellipse2D.Double(-0.5,-0.5,1,1));
+	}
+	
+	private static void filledTriangle(Graphics2D g2) { // width = 1, height = 1, center of base is at (0,0);
+		Path2D path = new Path2D.Double();  
+		path.moveTo(-0.5,0);
+		path.lineTo(0.5,0);
+		path.lineTo(0,1);
+		path.closePath();
+		g2.fill(path);
+	}
 
 
 
@@ -202,7 +176,7 @@ public class SceneGraph extends JPanel {
 	 * It also sets the preferred size of the panel to the constants WIDTH and HEIGHT.
 	 * And it creates a timer to drive the animation.
 	 */
-	public SceneGraph() {
+	public SubroutineHierarchy() {
 		display = new JPanel() {
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -210,7 +184,7 @@ public class SceneGraph extends JPanel {
 				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 				applyLimits(g2, X_LEFT, X_RIGHT, Y_TOP, Y_BOTTOM, false);
 				g2.setStroke( new BasicStroke(pixelSize) ); // set default line width to one pixel.
-				world.draw(g2);
+				drawWorld(g2);  // draw the world
 			}
 		};
 		display.setPreferredSize( new Dimension(WIDTH,HEIGHT));
@@ -241,7 +215,6 @@ public class SceneGraph extends JPanel {
 		setBorder( BorderFactory.createLineBorder(Color.DARK_GRAY,4) );
 		add(top,BorderLayout.NORTH);
 		add(display,BorderLayout.CENTER);
-		createWorld();
 	}
 
 
