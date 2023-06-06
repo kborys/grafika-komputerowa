@@ -109,10 +109,10 @@ public class Lab6 extends GLJPanel implements GLEventListener  {
 
 		gl2.glBegin(GL2.GL_TRIANGLES);
 
-		float[] material1Ambient = {0.8f, 0.2f, 0.2f, 1};
-		float[] material1Diffuse = {0.8f, 0.2f, 0.2f, 1};
-		float[] material1Specular = {1, 1, 1, 1};
-		float material1Shininess = 64;
+		float[] material1Ambient = {materials[11][0], materials[11][1], materials[11][2], materials[11][3], materials[11][4]};
+		float[] material1Diffuse = {materials[11][4], materials[11][4], materials[11][6], materials[11][7]};
+		float[] material1Specular = {materials[11][8], materials[11][9], materials[11][10], materials[11][11]};
+		float material1Shininess = materials[11][12];
 		gl2.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, material1Ambient, 0);
 		gl2.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE, material1Diffuse, 0);
 		gl2.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, material1Specular, 0);
@@ -164,19 +164,20 @@ public class Lab6 extends GLJPanel implements GLEventListener  {
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);
 		gl2.glEnable(GL2.GL_DEPTH_TEST);
 		gl2.glEnable(GL2.GL_NORMALIZE);
+
+		// Włączenie oswietlenia
 		gl2.glEnable(GL2.GL_LIGHTING);
 		gl2.glEnable(GL2.GL_LIGHT1);
 
-		// Oświetlenie
+		// Właściwości oświetlenia
 		float[] lightDiffuse = {.8f, .8f, .8f, 1};
 		float[] lightSpecular = {0.5f, 0.5f, 0.5f, 1};
 		float[] lightAmbient = {0f, 0f, 0f, 1};
+		float[] lightPosition = {0, 10, 0, 1}; // Light position
 		gl2.glLightfv(gl2.GL_LIGHT1, gl2.GL_DIFFUSE, lightDiffuse, 0);
 		gl2.glLightfv(gl2.GL_LIGHT1, gl2.GL_SPECULAR, lightSpecular, 0);
 		gl2.glLightfv(gl2.GL_LIGHT1, gl2.GL_AMBIENT, lightAmbient, 0);
-		float[] lightPosition = {0, 10, 0, 1}; // Light position
 		gl2.glLightfv(gl2.GL_LIGHT1, gl2.GL_POSITION, lightPosition, 0);
-		gl2.glEnable(GL2.GL_LIGHT1);
 	}
 
 
