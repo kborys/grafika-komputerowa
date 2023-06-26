@@ -465,7 +465,7 @@ public class TexturedShapes {
     }
 
     public static void uvPyramid(GL2 gl) {
-        uvCone(gl, 0.5, 1, 7, 7, 1, true);
+        uvCone(gl, 0.5, 1, 12, 7, 1, true);
     }
 
 }
